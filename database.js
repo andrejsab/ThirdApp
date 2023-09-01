@@ -26,42 +26,26 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-import { collection, addDoc, getDocs, doc, setDoc } from "firebase/firestore";
+import { collection,  getDocs, query } from "firebase/firestore";
 
 export const initDB = () => {
   // Firestore creates collections and documents on-the-fly, so no need to initialize
 };
 
-export const insertNode = async (name, callback) => {
-  try {
-    const docRef = await addDoc(collection(db, "nodes"), { name });
-    callback(docRef.id);
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
 
-export const insertEdge = async (fromNode, toNode) => {
-  try {
-    await addDoc(collection(db, "edges"), { fromNode, toNode });
-  } catch (e) {
-    console.error("Error adding document: ", e);
-  }
-};
+export const readDataFromFirestore = async (callback) => {
+  // Read nodes from Firestore
+  const nodeQuery = query(collection(db, 'nodes'));
+  const nodeQuerySnapshot = await getDocs(nodeQuery);
+  const nodes = nodeQuerySnapshot.docs.map(doc => doc.data());
+  
+  console.log('Nodes:', nodes);
 
-export const fetchGraphData = async (callback) => {
-  const nodes = [];
-  const edges = [];
+  // Read edges from Firestore
+  const edgeQuery = query(collection(db, 'edges'));
+  const edgeQuerySnapshot = await getDocs(edgeQuery);
+  const edges = edgeQuerySnapshot.docs.map(doc => doc.data());
 
-  const querySnapshotNodes = await getDocs(collection(db, "nodes"));
-  querySnapshotNodes.forEach((doc) => {
-    nodes.push({ id: doc.id, ...doc.data() });
-  });
-
-  const querySnapshotEdges = await getDocs(collection(db, "edges"));
-  querySnapshotEdges.forEach((doc) => {
-    edges.push({ id: doc.id, ...doc.data() });
-  });
-
+  console.log('Edges:', edges);
   callback(nodes, edges);
 };
