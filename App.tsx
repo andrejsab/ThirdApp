@@ -4,12 +4,12 @@ import { initDB, insertNode, insertEdge, fetchGraphData } from './database';
 import { Circle, G, Line, Svg } from 'react-native-svg';
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3-shape';
-
+import Constants from 'expo-constants';
 export default function App() {
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   
-  useEffect(() => {
+/*  useEffect(() => {
     initDB();
     insertNode('Node1', (id1) => {
       insertNode('Node2', (id2) => {
@@ -18,7 +18,7 @@ export default function App() {
       });
     });
   }, []);
-
+*/
   const fetchData = () => {
     fetchGraphData((fetchedNodes, fetchedEdges) => {
       setNodes(fetchedNodes);
@@ -70,7 +70,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Graph Visualization</Text>
+      <Text>Constants.expoConfig.extra.firebaseApiKey</Text>
       <Button title="Fetch Data" onPress={fetchData} />
       <Svg width={width} height={height}>
         <G>
